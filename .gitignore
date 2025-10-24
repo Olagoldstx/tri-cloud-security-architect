@@ -16,3 +16,15 @@
 **/.terraform/*
 .env
 .DS_Store
+.gitattributes
+.cache/trivy/db/trivy.db
+.cache/trivy/db/trivy.db
+.cache/
+.trivy/
+**/trivy.db
+.terraform/
+**/.terraform/*
+*.tfstate
+*.tfstate.backup
+.env
+.DS_Store
