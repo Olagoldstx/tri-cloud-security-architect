@@ -1,0 +1,48 @@
+# 🛡️ MULTI-STAGE DOCKERFILE FOR MAXIMUM SECURITY
+
+# Stage 1: Build stage with development tools
+FROM alpine:3.18 as builder
+
+# Install build tools
+RUN apk add --no-cache go git
+
+# Copy source code
+COPY src/ /build/
+WORKDIR /build
+
+# Initialize Go module and build
+RUN go mod init my-secure-app && \
+    go mod tidy && \
+    go build -o myapp .
+
+# Stage 2: Production stage - minimal and secure
+FROM alpine:3.18
+
+# Security labels
+LABEL maintainer="security-team@company.com"
+LABEL stage="production"
+LABEL security.scan="true"
+
+# Install only runtime dependencies (no build tools!)
+RUN apk add --no-cache ca-certificates
+
+# Create non-root user
+RUN addgroup -g 1000 -S appgroup && \
+    adduser -u 1000 -S appuser -G appgroup
+
+# Copy only the built binary from builder stage
+COPY --from=builder --chown=appuser:appgroup /build/myapp /app/myapp
+
+# Set secure working directory
+WORKDIR /app
+RUN chown appuser:appgroup /app
+
+# Switch to non-root user
+USER appuser
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD /app/myapp health
+
+# Run the application
+CMD ["/app/myapp"]

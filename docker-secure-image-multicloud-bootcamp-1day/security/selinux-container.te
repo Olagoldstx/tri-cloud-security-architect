@@ -1,0 +1,11 @@
+module secure_flask 1.0;
+
+require {
+  type container_t;
+  class file { read open getattr };
+  class dir { search getattr };
+}
+
+# Example allow rules (minimal demo). Real policies should be generated via udica or similar.
+allow container_t self:file {{ read open getattr }};
+allow container_t self:dir {{ search getattr }};

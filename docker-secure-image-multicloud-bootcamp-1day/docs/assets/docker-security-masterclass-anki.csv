@@ -1,0 +1,56 @@
+Front,Back
+What is Kyverno?,"A Kubernetes-native policy engine for validating, mutating, and verifying resources."
+What flag enforces read-only filesystem in Docker?,--read-only
+Why avoid :latest tags in Dockerfiles?,They break reproducibility and can introduce untested updates.
+What is Distroless?,"A minimal base image without package manager or shell, reducing attack surface."
+What is Alpine used for in Docker?,"Lightweight base image for small, fast containers with musl libc."
+How do you enforce non-root containers in Kubernetes?,Kyverno policy or PodSecurityContext runAsNonRoot: true.
+What is Falco?,Runtime security tool using eBPF to detect suspicious container activity.
+Define EKS.,Elastic Kubernetes Service – AWS managed Kubernetes offering.
+Define GKE.,Google Kubernetes Engine – managed Kubernetes on Google Cloud.
+Define AKS.,Azure Kubernetes Service – managed Kubernetes on Azure.
+What is Cosign used for?,Signing and verifying container images with cryptographic signatures.
+What tool generates SBOMs?,Syft (Anchore).
+What tool scans vulnerabilities?,Trivy (Aqua Security).
+Which benchmark defines Docker hardening best practices?,CIS Docker Benchmark.
+What is no-new-privileges flag?,Prevents processes from gaining more privileges than their parent.
+How can you drop all Linux capabilities in Docker?,Use --cap-drop=ALL flag at runtime.
+What is SLSA?,Supply chain Levels for Software Artifacts – framework for build provenance.
+Why use IAM least privilege?,To reduce impact if credentials are compromised.
+What is an SBOM?,Software Bill of Materials listing packages and dependencies in an image.
+What is an admission controller?,Kubernetes component that intercepts API requests before persistence to etcd.
+What is Workload Identity Federation (GCP)?,Allows workloads to assume GCP IAM roles without long-lived keys.
+What are managed identities (Azure)?,Azure AD identities assigned to resources for secure access to other services.
+What is IRSA in AWS?,IAM Roles for Service Accounts – map K8s service accounts to IAM roles.
+How to check image size in Docker?,docker images command lists sizes.
+Why prefer multi-stage builds?,Reduce final image size and remove build-time dependencies.
+What is AppArmor?,Linux kernel security module for mandatory access control profiles.
+What is Seccomp?,Linux syscall filter defining allowed system calls for a container.
+What does Falco detect?,Syscall-level anomalies like spawning a shell or accessing /etc/shadow.
+Which flag prevents privileged containers?,--privileged should never be used; omit it.
+What is Docker Content Trust?,Feature enabling signed images using Notary to verify publisher identity.
+How to build Alpine image from repo?,make build-alpine
+How to run CIS Docker Benchmark check?,make bench-report
+Where do Kyverno policies live in repo?,k8s/kyverno/ directory.
+How to apply Kyverno policies?,make kyverno-apply
+Where are Falco labs documented?,docs/lessons/lab-falco.md
+Command to create SBOM?,bash scripts/generate_sbom_syft.sh IMAGE_NAME
+Command to scan image vulnerabilities?,bash scripts/scan_trivy.sh IMAGE_NAME
+Command to sign image?,bash scripts/sign_cosign.sh IMAGE_NAME
+Which clouds have managed K8s services?,"AWS (EKS), GCP (GKE), Azure (AKS)."
+What is a namespace?,"Linux isolation mechanism separating processes, network, and file systems."
+What are cgroups?,Control groups that limit CPU/memory usage per container.
+What does --tmpfs /tmp do?,Creates ephemeral writable tmpfs for temporary files on read-only container FS.
+Where to find IAM policies?,docs/iam/ directory.
+How to enforce least privilege in AWS CI?,Create ECR role with minimal push policy and GitHub OIDC trust.
+What is verifyImages in Kyverno?,Policy rule that enforces signature verification for images.
+Purpose of runtime threat detection?,Detect compromise attempts and policy violations at runtime.
+Why is rootless better?,Prevents container breakout from root-level privileges.
+When to use Alpine over Distroless?,When debugging or small size is needed but minimal base remains acceptable.
+Why scan images regularly?,To catch newly disclosed CVEs even after build time.
+Why sign images?,To ensure authenticity and integrity of container builds.
+How does Kyverno enforce policy?,By acting as Kubernetes admission controller validating API requests.
+What is Falco output used for?,Sending alerts to SIEM or monitoring pipeline.
+Which Docker feature maps to CIS Benchmark Section 5?,Runtime container configuration best practices.
+What does read-only root FS prevent?,Modification of critical binaries or configurations inside container.
+Which tool provides Docker Bench Security script?,docker/docker-bench-security project.

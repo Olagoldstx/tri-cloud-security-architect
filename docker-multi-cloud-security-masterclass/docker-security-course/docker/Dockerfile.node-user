@@ -1,0 +1,15 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY src/final-secrets-app.js .
+COPY src/package.json .
+
+RUN npm install
+
+# Use the node user that already exists in the image
+USER node
+
+EXPOSE 3000
+
+CMD ["node", "final-secrets-app.js"]

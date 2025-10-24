@@ -1,0 +1,15 @@
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache/
+.git/
+.gitignore
+.github/
+dist/
+build/
+venv/
+.env
+*.log
+sbom.*
+results/

@@ -1,0 +1,24 @@
+#include <tunables/global>
+
+profile secure-flask flags=(attach_disconnected) {{
+  network,
+  capability,
+  file,
+  umount,
+
+  deny capability sys_admin,   # drop powerful caps
+  deny capability setuid,
+  deny capability setgid,
+
+  # Allow common app paths
+  /app/** r,
+  /tmp/** rwk,
+
+  # Python / distroless loaders (adjust as needed)
+  /usr/bin/python3 rmix,
+  /usr/lib/** r,
+  /lib/** r,
+
+  # Default deny
+  deny /** wklx,
+}}

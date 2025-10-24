@@ -1,0 +1,107 @@
+name: docker-secure-image
+
+on:
+  pull_request:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build_scan_sbom:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write   # for keyless cosign (if enabled)
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          tags: docker-secure-image-multicloud-bootcamp-1day:ci
+          load: true
+
+      - name: Install Trivy
+        uses: aquasecurity/setup-trivy@v0.2.2
+
+      - name: Scan image (fail on HIGH,CRITICAL)
+        run: trivy image --severity HIGH,CRITICAL --exit-code 1 --no-progress docker-secure-image-multicloud-bootcamp-1day:ci
+
+      - name: Install Syft
+        uses: anchore/sbom-action/download-syft@v0.17.6
+
+      - name: Generate SBOM
+        run: syft docker-secure-image-multicloud-bootcamp-1day:ci -o spdx-json=sbom.spdx.json
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.spdx.json
+
+      # - name: Install Cosign
+      #   uses: sigstore/cosign-installer@v3.6.0
+      #
+      # - name: Sign (keyless OIDC)
+      #   env:
+      #     COSIGN_EXPERIMENTAL: "true"
+      #   run: |
+      #     cosign version
+      #     # cosign sign --yes docker-secure-image-multicloud-bootcamp-1day:ci
+
+  # Optional: push to registries on tag
+  push_multi_cloud:
+    needs: build_scan_sbom
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Login to AWS ECR
+        if: env.AWS_REGION && env.ECR_ACCOUNT_ID && env.ECR_REPO
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build & Push to ECR
+        if: env.AWS_REGION && env.ECR_ACCOUNT_ID && env.ECR_REPO
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ env.ECR_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPO }}:latest
+
+      - name: Login to GCP Artifact Registry
+        if: env.GCP_LOCATION && env.GCP_PROJECT_ID && env.GCP_REPO
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.GCP_LOCATION }}-docker.pkg.dev
+          username: _json_key
+          password: ${{ secrets.GCP_SA_KEY_JSON }}
+
+      - name: Build & Push to Artifact Registry
+        if: env.GCP_LOCATION && env.GCP_PROJECT_ID && env.GCP_REPO
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ env.GCP_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_REPO }}/docker-secure-image-multicloud-bootcamp-1day:latest
+
+      - name: Login to Azure ACR
+        if: env.ACR_NAME
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ env.ACR_NAME }}.azurecr.io
+          username: ${{ secrets.AZURE_ACR_USERNAME }}
+          password: ${{ secrets.AZURE_ACR_PASSWORD }}
+
+      - name: Build & Push to ACR
+        if: env.ACR_NAME
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ env.ACR_NAME }}.azurecr.io/docker-secure-image-multicloud-bootcamp-1day:latest

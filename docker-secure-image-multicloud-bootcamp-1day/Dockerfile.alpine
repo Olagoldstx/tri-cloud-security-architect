@@ -1,0 +1,44 @@
+# ---- build stage (Alpine) ----
+FROM python:3.12-alpine AS build
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# Build deps for compiling wheels
+RUN apk add --no-cache gcc musl-dev libffi-dev openssl-dev
+
+WORKDIR /app
+COPY app/requirements.txt .
+
+# Install deps into a portable prefix (no venv headaches)
+# We'll copy /opt/py into the runtime
+RUN pip install --no-cache-dir --prefix=/opt/py -r requirements.txt \
+ && pip install --no-cache-dir --prefix=/opt/py gunicorn
+
+# Copy application code
+COPY app/ .
+
+# ---- runtime stage (Alpine) ----
+FROM alpine:3.20
+
+# Minimal runtime
+RUN apk add --no-cache python3
+
+# Non-root user
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Make the installed packages available
+ENV PATH="/opt/py/bin:$PATH" \
+    PYTHONPATH="/opt/py/lib/python3.12/site-packages" \
+    APP_ENV=prod
+
+WORKDIR /app
+# bring in only the deps and app from builder
+COPY --from=build /opt/py /opt/py
+COPY --from=build /app /app
+
+USER appuser
+EXPOSE 8080
+
+# Use python -m so PATH/PYTHONPATH handle the module correctly
+CMD ["python","-m","gunicorn","-w","2","-b","0.0.0.0:8080","main:app"]

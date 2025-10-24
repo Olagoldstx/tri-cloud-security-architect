@@ -1,0 +1,12 @@
+{
+  "name": "secrets-demo",
+  "version": "1.0.0",
+  "description": "Docker Secrets Security Demo",
+  "main": "working-secrets-app.js",
+  "scripts": {
+    "start": "node working-secrets-app.js"
+  },
+  "keywords": ["docker", "secrets", "security"],
+  "author": "Security Team",
+  "license": "MIT"
+}

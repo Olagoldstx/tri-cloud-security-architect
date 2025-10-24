@@ -1,0 +1,3 @@
+failure-threshold: warning
+ignored:
+  - DL3008  # pin versions for apk/apt-get (handled in base)

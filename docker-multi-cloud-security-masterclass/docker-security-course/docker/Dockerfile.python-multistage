@@ -1,0 +1,46 @@
+# 🐍 PYTHON MULTI-STAGE BUILD - SECURE
+
+# Stage 1: Builder stage with build tools
+FROM python:3.9-alpine as builder
+
+# Install build dependencies
+RUN apk add --no-cache build-base
+
+# Copy requirements and install
+COPY src/requirements.txt /tmp/
+RUN pip install --user --no-cache-dir -r /tmp/requirements.txt
+
+# Stage 2: Production stage - minimal
+FROM python:3.9-alpine
+
+# Security labels
+LABEL maintainer="security-team@company.com"
+LABEL stage="production"
+LABEL security.scan="true"
+
+# Create non-root user
+RUN addgroup -g 1000 -S appgroup && \
+    adduser -u 1000 -S appuser -G appgroup
+
+# Copy installed packages from builder
+COPY --from=builder /root/.local /home/appuser/.local
+
+# Copy application code
+COPY src/app.py /app/
+WORKDIR /app
+
+# Set proper permissions
+RUN chown -R appuser:appgroup /app
+
+# Switch to non-root user
+USER appuser
+
+# Add user's local bin to PATH
+ENV PATH="/home/appuser/.local/bin:${PATH}"
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python /app/app.py health
+
+# Run application
+CMD ["python", "/app/app.py"]

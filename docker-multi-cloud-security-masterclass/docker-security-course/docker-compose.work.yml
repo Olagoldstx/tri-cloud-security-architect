@@ -1,0 +1,10 @@
+services:
+  secrets-demo:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.working
+    container_name: working-secrets-demo
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./secrets:/run/secrets:ro

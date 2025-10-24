@@ -1,0 +1,71 @@
+# 🛡️ SECURE MULTI-STAGE DOCKERFILE
+# Demonstrates security best practices
+
+# Stage 1: Builder - has development tools
+FROM alpine:3.18 AS builder
+
+# Install build tools
+RUN apk add --no-cache nodejs npm
+
+# Create app directory
+WORKDIR /build
+
+# Create minimal package.json with a dependency to generate node_modules
+RUN echo '{ \
+  "name": "secure-app", \
+  "version": "1.0.0", \
+  "dependencies": { \
+    "express": "^4.18.0" \
+  } \
+}' > package.json
+
+# Install dependencies to create node_modules
+RUN npm install
+
+# Create a simple application
+RUN echo 'const express = require("express"); \
+const app = express(); \
+app.get("/", (req, res) => { \
+  res.send("🛡️ Secure Multi-Stage Node.js App Running!"); \
+}); \
+app.get("/health", (req, res) => { \
+  res.status(200).send("OK"); \
+}); \
+app.listen(3000, () => { \
+  console.log("Server running on port 3000"); \
+});' > app.js
+
+# Stage 2: Production - minimal and secure
+FROM alpine:3.18
+
+# Security metadata
+LABEL maintainer="security-team@company.com"
+LABEL description="Secure multi-stage Node.js application"
+LABEL security.scan="true"
+
+# Install only Node.js runtime (no npm)
+RUN apk add --no-cache nodejs
+
+# Create non-root user
+RUN addgroup -g 1000 -S appgroup && \
+    adduser -u 1000 -S appuser -G appgroup
+
+# Create app directory
+WORKDIR /app
+
+# Copy built application from builder
+COPY --from=builder --chown=appuser:appgroup /build/app.js /app/
+COPY --from=builder --chown=appuser:appgroup /build/node_modules /app/node_modules
+
+# Switch to non-root user
+USER appuser
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD node -e "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
+
+# Expose port
+EXPOSE 3000
+
+# Run application
+CMD ["node", "app.js"]

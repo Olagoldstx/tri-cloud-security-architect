@@ -1,0 +1,10 @@
+{
+  "title": "artifactregistry.writer.minimal",
+  "description": "Minimal writer for a single Artifact Registry repo",
+  "includedPermissions": [
+    "artifactregistry.repositories.downloadArtifacts",
+    "artifactregistry.repositories.list",
+    "artifactregistry.repositories.get",
+    "artifactregistry.repositories.uploadArtifacts"
+  ]
+}

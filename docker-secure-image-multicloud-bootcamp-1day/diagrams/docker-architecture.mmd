@@ -1,0 +1,13 @@
+```mermaid
+graph TB
+  A[Developer] --> B[Dockerfile]
+  B --> C[Build Image]
+  C --> D[Image Layers]
+  D --> E[(Registry: ECR/GCR/ACR)]
+  E --> F[Pull to Runtime]
+  F --> G[Namespaces & cgroups]
+  G --> H[Seccomp / AppArmor / SELinux]
+  H --> I[CapDrop, no-new-privileges]
+  I --> J[Threat Detection (Falco/eBPF)]
+  J --> K[Policy Gate (Kyverno verifyImages)]
+```

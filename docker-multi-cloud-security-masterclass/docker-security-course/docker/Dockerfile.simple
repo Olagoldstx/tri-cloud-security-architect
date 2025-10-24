@@ -1,0 +1,11 @@
+# Simple two-stage build for practice
+
+# Stage 1: Build stage
+FROM alpine:3.18 AS builder
+RUN mkdir -p /app && \
+    echo "Building application..." > /app/build.txt
+
+# Stage 2: Run stage  
+FROM alpine:3.18
+COPY --from=builder /app/build.txt /app/message.txt
+CMD ["cat", "/app/message.txt"]

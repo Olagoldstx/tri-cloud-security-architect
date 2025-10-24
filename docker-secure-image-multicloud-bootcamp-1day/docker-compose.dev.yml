@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  web:
+    build:
+      context: .
+    image: docker-secure-image-multicloud-bootcamp-1day:dev
+    ports:
+      - "8080:8080"
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:secure-flask
+    cap_drop:
+      - ALL
+    # Example: mount seccomp profile (works with docker run; compose uses default unless daemon configured)
+    # security_opt:
+    #   - seccomp:./security/seccomp.json

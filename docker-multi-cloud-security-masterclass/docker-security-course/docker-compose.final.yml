@@ -1,0 +1,7 @@
+services:
+  secrets-demo:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.node-user
+    container_name: final-secrets-demo
+    # ... rest stays the same

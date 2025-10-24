@@ -1,0 +1,16 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY src/final-secrets-app.js .
+COPY src/package.json .
+
+RUN npm install
+
+# Fix permissions on secrets directory
+RUN mkdir -p /run/secrets && \
+    chmod 755 /run/secrets
+
+EXPOSE 3000
+
+CMD ["node", "final-secrets-app.js"]
