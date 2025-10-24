@@ -7,3 +7,12 @@
 .terraform/
 **/.terraform/*
 .env
+.cache/
+.trivy/
+**/trivy.db
+*.tfstate
+*.tfstate.backup
+.terraform/
+**/.terraform/*
+.env
+.DS_Store
