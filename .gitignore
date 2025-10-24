@@ -1,0 +1,9 @@
+.cache/
+.trivy/
+**/trivy.db
+.DS_Store
+*.tfstate
+*.tfstate.backup
+.terraform/
+**/.terraform/*
+.env
