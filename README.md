@@ -1,3 +1,8 @@
+
+<p align="center">
+  <img src="assets/secure-the-cloud-banner.png" alt="Secure the Cloud Banner" width="100%">
+</p>
+
 # ☁️ CloudLab Verification — Local DevSecOps Environment
 
 > **Author:** Olakunle Paul Omoniyi  
