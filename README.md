@@ -13,6 +13,7 @@
 ---
 
 ## 🧠 Architecture Overview
+```plaintext 
 ┌──────────────────────────────┐
 │ Windows 11 (Home Edition) │
 │ ├─ WSL 2 Subsystem Enabled │
