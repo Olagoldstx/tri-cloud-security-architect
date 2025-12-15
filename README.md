@@ -1,3 +1,18 @@
+<!-- BADGES:START -->
+
+<div align="left">
+[![](https://img.shields.io/github/license/Olagoldstx/tri-cloud-security-architect?style=for-the-badge&labelColor=0f172a)](https://github.com/Olagoldstx/tri-cloud-security-architect)
+[![](https://img.shields.io/github/stars/Olagoldstx/tri-cloud-security-architect?style=for-the-badge&labelColor=0f172a&logo=github)](https://github.com/Olagoldstx/tri-cloud-security-architect)
+[![](https://img.shields.io/github/last-commit/Olagoldstx/tri-cloud-security-architect?style=for-the-badge&labelColor=0f172a)](https://github.com/Olagoldstx/tri-cloud-security-architect)
+[![](https://img.shields.io/github/issues/Olagoldstx/tri-cloud-security-architect?style=for-the-badge&labelColor=0f172a)](https://github.com/Olagoldstx/tri-cloud-security-architect)
+[![](https://img.shields.io/github/issues-pr/Olagoldstx/tri-cloud-security-architect?style=for-the-badge&labelColor=0f172a)](https://github.com/Olagoldstx/tri-cloud-security-architect)
+[![](https://img.shields.io/github/repo-size/Olagoldstx/tri-cloud-security-architect?style=for-the-badge&labelColor=0f172a)](https://github.com/Olagoldstx/tri-cloud-security-architect)
+[![](https://img.shields.io/github/languages/top/Olagoldstx/tri-cloud-security-architect?style=for-the-badge&labelColor=0f172a)](https://github.com/Olagoldstx/tri-cloud-security-architect)
+[![](https://img.shields.io/github/actions/workflow/status/Olagoldstx/tri-cloud-security-architect/ci.yml?branch=main&style=for-the-badge&labelColor=0f172a)](https://github.com/Olagoldstx/tri-cloud-security-architect)
+</div>
+
+<!-- BADGES:END -->
+
 
 <p align="center">
   <img src="assets/secure-the-cloud-banner.png" alt="Secure the Cloud Banner" width="100%">
